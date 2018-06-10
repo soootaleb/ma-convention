@@ -13,7 +13,14 @@ class MCConvention extends React.Component<{
     onEmpty: () => ({ type: MCActionsTypes, payload: INotification })
 }> {
 
-    public state = { centreFormation: 'Indiquez un centre de formation' };
+    public state = {
+        centreFormation: 'Indiquez un centre de formation',
+        participants: [],
+        coutUnit: 100,
+        tauxTVA: 19.6,
+        entreprise: 'Indiquez une entreprise',
+        client: 'Indiquez un client'
+    };
 
     private style = (self: MCConvention) => ({
         root: {
@@ -66,13 +73,34 @@ class MCConvention extends React.Component<{
                     </div>
 
                     <div style={({...Style.row().padding('10px 0px').build()})}>                        
-                        1) <MCInput width={110} placeholder="Centre de formation"/> (Organisme de formation) enregistré
+                        1) <MCInput
+                            width={110}
+                            placeholder="Centre de formation"
+                            onChange={(event) => this.setState({
+                                ...this.state,
+                                centreFormation: event.target.value
+                            })}   
+                        /> (Organisme de formation) enregistré
                         sous le numéro de déclaration d'activité SIRET auprès de la Direction Régionale des Entreprises,
                         de la Concurrence, de la Consommation, du Travail et de l’Emploi (DIRECCTE)
                     </div>
                     <div style={({...Style.row().padding('10px 0px').build()})}>
-                        2) <MCInput width={80} placeholder="Entreprise"/> 
-                            (<MCInput width={80} placeholder="Client"/>)
+                        2) <MCInput
+                            width={80}
+                            placeholder="Entreprise"
+                            onChange={(event) => this.setState({
+                                ...this.state,
+                                entreprise: event.target.value
+                            })}  
+                        /> 
+                            (<MCInput
+                                width={80}
+                                placeholder="Client"
+                                onChange={(event) => this.setState({
+                                ...this.state,
+                                client: event.target.value
+                            })}  
+                            />)
                         (Désignation de l’entreprise) représentée par NOM REPR PREVOM RPR
                         est conclue la convention suivante, en application des dispositions du
                         Livre III de la Sixième partie du Code du travail portant organisation
@@ -83,8 +111,8 @@ class MCConvention extends React.Component<{
                         Article 1er : Objet de la convention
                     </div>
 
-                    L’organisme <MCInput width={110} placeholder="Centre de formation"/>
-                    organisera l’action de formation suivante :
+                    L’organisme <strong>{this.state.centreFormation}</strong> organisera
+                    l’action de formation suivante :
 
                     <ul>
                         <li>Intitulé du stage : <MCInput width={130} placeholder="Nom de la formation"/></li>
@@ -93,8 +121,8 @@ class MCConvention extends React.Component<{
                         <li>Type d’action de formation (article L.6313-1 du Code du travail):
                             <MCInput width={130} placeholder="Action de formation"/>
                         </li>
-                        <li>Dates : Du <MCInput width={80} placeholder="Date de début"/> au 
-                            <MCInput width={80} placeholder="Date de fin"/>
+                        <li>Dates : Du <MCInput width={120} placeholder="Date de début"/> au 
+                            <MCInput width={120} placeholder="Date de fin"/>
                         </li>
                     </ul>
                     
@@ -102,10 +130,10 @@ class MCConvention extends React.Component<{
                         Article 2 : Effectif formé
                     </div>
 
-                    L’organisme <MCInput width={130} placeholder="Centre de formation"/>
-                    accueillera les personnes suivantes (noms et fonctions) :
+                    L’organisme <strong>{this.state.centreFormation}</strong> accueillera
+                    les personnes suivantes (noms et fonctions) :
                     <ul>
-                        <li><MCInput width={130} placeholder="Nom du participant"/></li>
+                        <li><MCInput width={130} placeholder="Nom du participant" /></li>
                         <MCButton label="Ajouter un participant" onClick={this.props.onAdd}/>
                     </ul>
                     
@@ -117,11 +145,31 @@ class MCConvention extends React.Component<{
 
                     <ul>
                         <li>Frais de formation : coût unitaire H.T
-                            <MCInput width={80} placeholder="Coût unitaire"/> €
+                            <MCInput
+                                width={80}
+                                placeholder="Coût unitaire"
+                                onChange={(event) => this.setState({
+                                    ...this.state,
+                                    coutUnit: parseFloat(event.target.value)
+                                })}  
+                            /> €
                         </li>
                         <li>Les frais de restauration et d’hébergement ne sont pas pris en compte.</li>
-                        <li>T.V.A. (<MCInput width={30} placeholder="T.V.A"/>%) 100 €</li>
-                        <li>TOTAL GENERAL 1000 €</li>
+                        <li>
+                            T.V.A. (<MCInput
+                                width={30}
+                                placeholder="19.6"
+                                onChange={(event) => this.setState({
+                                    ...this.state,
+                                    tauxTVA: parseFloat(event.target.value)
+                                })}  
+                            />
+                            %) <strong>{(this.state.coutUnit * this.state.tauxTVA / 100).toFixed(2)} €</strong>
+                        </li>
+                        <li>TOTAL GENERAL <strong>
+                            {(this.state.coutUnit + this.state.coutUnit * this.state.tauxTVA / 100).toFixed(2)} €
+                            </strong>
+                        </li>
                     </ul>
                                         
                     <div style={({fontWeight: 700, paddingTop: 10})}>
@@ -144,7 +192,12 @@ class MCConvention extends React.Component<{
                         Si une contestation ou un différend ne peuvent être réglés à l’amiable,
                         le Tribunal sera seul compétent pour régler le litige.
 
-                    Fait en double exemplaire, à <MCInput placeholder="Ville"/> le, <MCInput placeholder="Date"/>
+                    Fait en double exemplaire, à <MCInput 
+                        placeholder="Ville"
+                    /> le, <MCInput
+                        width={120}
+                        placeholder="Date"
+                    />
 
                     <div
                         style={({
