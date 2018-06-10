@@ -1,16 +1,15 @@
 import * as React from 'react';
 import { baseShadow } from '../styles';
-import { ITodo, INotification } from '../interfaces';
+import { INotification } from '../interfaces';
 import { MCActionsTypes, MCNotificationLevel } from '../enumerations';
 import { connect } from 'react-redux';
-import { addTodo, addNotification } from '../actions';
+import { addNotification } from '../actions';
 import { Style } from '../styles/builder';
 import MCInput from './MCInput';
 import MCButton from '../components/MCButton';
 
 class MCConvention extends React.Component<{
-    onAdd: (todo: ITodo) => ({ type: MCActionsTypes, payload: ITodo })
-    onEmpty: () => ({ type: MCActionsTypes, payload: INotification })
+    onEmpty: (message: string) => ({ type: MCActionsTypes, payload: INotification })
 }> {
 
     public state = {
@@ -19,7 +18,8 @@ class MCConvention extends React.Component<{
         coutUnit: 100,
         tauxTVA: 19.6,
         entreprise: 'Indiquez une entreprise',
-        client: 'Indiquez un client'
+        client: 'Indiquez un client',
+        currentParticipant: ''
     };
 
     private style = (self: MCConvention) => ({
@@ -133,8 +133,30 @@ class MCConvention extends React.Component<{
                     L’organisme <strong>{this.state.centreFormation}</strong> accueillera
                     les personnes suivantes (noms et fonctions) :
                     <ul>
-                        <li><MCInput width={130} placeholder="Nom du participant" /></li>
-                        <MCButton label="Ajouter un participant" onClick={this.props.onAdd}/>
+                        {this.state.participants.map((name, index) => <li key={index}>{name}</li>)}
+                        <li><MCInput
+                            width={130}
+                            value={this.state.currentParticipant}
+                            placeholder="Nom du participant"
+                            onChange={(event) => this.setState({
+                                ...this.state,
+                                currentParticipant: event.target.value
+                            })}  
+                        /></li>
+                        <MCButton
+                            label="Ajouter un participant"
+                            onClick={() => {
+                                if (this.state.currentParticipant) {
+                                    this.setState({
+                                        ...this.state,
+                                        currentParticipant: '',
+                                        participants: [...this.state.participants, this.state.currentParticipant]
+                                    });
+                                } else {
+                                    this.props.onEmpty('Indiquez le nom du participant');
+                                }
+                            }}
+                        />
                     </ul>
                     
                     <div style={({fontWeight: 700, paddingTop: 10})}>
@@ -224,17 +246,9 @@ class MCConvention extends React.Component<{
 }
 
 export default connect(null, (dispatch, props) => ({
-    onAdd: (todo: ITodo) => {
-        dispatch(addNotification({
-            level: MCNotificationLevel.SUCCESS,
-            header: 'Yeah !',
-            content: 'Todo added in your list'
-        }));
-        dispatch(addTodo(todo));
-    },
-    onEmpty: () => dispatch(addNotification({
+    onEmpty: (message: string) => dispatch(addNotification({
         level: MCNotificationLevel.WARNING,
         header: 'Oops !',
-        content: 'Please insert a label for your ticket'
+        content: message
     }))
 }))(MCConvention);
