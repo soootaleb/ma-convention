@@ -5,7 +5,8 @@ import { connect } from 'react-redux';
 class MCInput extends React.Component<{
     width?: number,
     placeholder?: string,
-    onChange?: any
+    onChange?: any,
+    value?: string,
 }> {
 
     public state = { value: '' };
@@ -25,6 +26,7 @@ class MCInput extends React.Component<{
         return (
             <input
                 type="text"
+                value={this.props.value}
                 style={this.style(this).input}
                 placeholder={this.props.placeholder}
                 onChange={(event) => this.props.onChange ? this.props.onChange(event) : null}
