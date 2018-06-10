@@ -6,6 +6,7 @@ import { INotification } from '../interfaces';
 import { removeNotification } from '../actions';
 import { MCActionsTypes } from '../enumerations';
 import MCConvention from './MCConvention';
+import MCActions from './MCActions';
 
 class MCApplication extends React.Component<{
   notifications: INotification[],
@@ -49,7 +50,9 @@ class MCApplication extends React.Component<{
   public render() {
     return (
       <div style={this.style.root}>
+        <div style={({width: 200})}/>
         <MCConvention />
+        <MCActions/>
         <div style={this.style.notifications} >
           {this.getNotifications()}
         </div>

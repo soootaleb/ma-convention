@@ -1,9 +1,11 @@
 import * as React from 'react';
 import { baseShadow, buttonBackground } from '../styles';
+import { MCColors } from '../enumerations';
 
 export default class MCButton extends React.Component<{
     label?: string,
-    onClick: any
+    onClick: any,
+    colors?: MCColors[]
 }> {
 
     public state = {
@@ -12,7 +14,7 @@ export default class MCButton extends React.Component<{
 
     private style = (self: MCButton) => ({
         ...baseShadow, // This a static mixin
-        ...buttonBackground(self), // This is a functionnal mixin
+        ...buttonBackground(self, self.props.colors), // This is a functionnal mixin
         width: 'auto',
         height: 25,
         cursor: 'pointer',
