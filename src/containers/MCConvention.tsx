@@ -5,13 +5,15 @@ import { MCActionsTypes, MCNotificationLevel } from '../enumerations';
 import { connect } from 'react-redux';
 import { addTodo, addNotification } from '../actions';
 import { Style } from '../styles/builder';
+import MCInput from './MCInput';
+import MCButton from '../components/MCButton';
 
 class MCConvention extends React.Component<{
     onAdd: (todo: ITodo) => ({ type: MCActionsTypes, payload: ITodo })
     onEmpty: () => ({ type: MCActionsTypes, payload: INotification })
 }> {
 
-    public state = { value: '' };
+    public state = { centreFormation: 'Indiquez un centre de formation' };
 
     private style = (self: MCConvention) => ({
         root: {
@@ -64,12 +66,14 @@ class MCConvention extends React.Component<{
                     </div>
 
                     <div style={({...Style.row().padding('10px 0px').build()})}>                        
-                        1) CENTRE FORMATION (Organisme de formation) enregistré
+                        1) <MCInput width={110} placeholder="Centre de formation"/> (Organisme de formation) enregistré
                         sous le numéro de déclaration d'activité SIRET auprès de la Direction Régionale des Entreprises,
                         de la Concurrence, de la Consommation, du Travail et de l’Emploi (DIRECCTE)
                     </div>
                     <div style={({...Style.row().padding('10px 0px').build()})}>
-                        2) ENTREPRISE  (CLIENT) (Désignation de l’entreprise) représentée par NOM REPR PREVOM RPR
+                        2) <MCInput width={80} placeholder="Entreprise"/> 
+                            (<MCInput width={80} placeholder="Client"/>)
+                        (Désignation de l’entreprise) représentée par NOM REPR PREVOM RPR
                         est conclue la convention suivante, en application des dispositions du
                         Livre III de la Sixième partie du Code du travail portant organisation
                         de la formation professionnelle continue.
@@ -79,25 +83,30 @@ class MCConvention extends React.Component<{
                         Article 1er : Objet de la convention
                     </div>
 
-                    L’organisme FORMATION PLUS organisera l’action de formation suivante :
+                    L’organisme <MCInput width={110} placeholder="Centre de formation"/>
+                    organisera l’action de formation suivante :
 
                     <ul>
-                        <li>Intitulé du stage : NOM FORMATION</li>
-                        <li>Objectifs : DESCRIPTION FORMATION</li>
+                        <li>Intitulé du stage : <MCInput width={130} placeholder="Nom de la formation"/></li>
+                        <li>Objectifs : <MCInput width={150} placeholder="Description de la formation"/></li>
                         <li>Programme et méthodes : joints en annexe 1.</li>
-                        <li>Type d’action de formation (article L.6313-1 du Code du travail): ACTION DE FORMATION</li>
-                        <li>Dates : Du 01 Juin au 30 Aout</li>
+                        <li>Type d’action de formation (article L.6313-1 du Code du travail):
+                            <MCInput width={130} placeholder="Action de formation"/>
+                        </li>
+                        <li>Dates : Du <MCInput width={80} placeholder="Date de début"/> au 
+                            <MCInput width={80} placeholder="Date de fin"/>
+                        </li>
                     </ul>
                     
                     <div style={({fontWeight: 700, paddingTop: 10})}>
                         Article 2 : Effectif formé
                     </div>
 
-                    L’organisme NOM ORGANISME accueillera les personnes suivantes (noms et fonctions) :
+                    L’organisme <MCInput width={130} placeholder="Centre de formation"/>
+                    accueillera les personnes suivantes (noms et fonctions) :
                     <ul>
-                        <li>Sofiane Taleb</li>
-                        <li>Quentin Brosse</li>
-                        <li>Barack Obama</li>
+                        <li><MCInput width={130} placeholder="Nom du participant"/></li>
+                        <MCButton label="Ajouter un participant" onClick={this.props.onAdd}/>
                     </ul>
                     
                     <div style={({fontWeight: 700, paddingTop: 10})}>
@@ -107,9 +116,11 @@ class MCConvention extends React.Component<{
                     En contrepartie de cette action de formation, l’employeur s’acquittera des coûts suivants :
 
                     <ul>
-                        <li>Frais de formation : coût unitaire H.T 100 €</li>
+                        <li>Frais de formation : coût unitaire H.T
+                            <MCInput width={80} placeholder="Coût unitaire"/> €
+                        </li>
                         <li>Les frais de restauration et d’hébergement ne sont pas pris en compte.</li>
-                        <li>T.V.A. (19,6%) 100 €</li>
+                        <li>T.V.A. (<MCInput width={30} placeholder="T.V.A"/>%) 100 €</li>
                         <li>TOTAL GENERAL 1000 €</li>
                     </ul>
                                         
@@ -133,7 +144,7 @@ class MCConvention extends React.Component<{
                         Si une contestation ou un différend ne peuvent être réglés à l’amiable,
                         le Tribunal sera seul compétent pour régler le litige.
 
-                    Fait en double exemplaire, à VILLE le, DATE
+                    Fait en double exemplaire, à <MCInput placeholder="Ville"/> le, <MCInput placeholder="Date"/>
 
                     <div
                         style={({
