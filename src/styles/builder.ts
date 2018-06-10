@@ -55,6 +55,11 @@ export class Style {
         return this;
     }
 
+    public padding(value: number | string): Style {
+        this.style.padding = value;
+        return this;
+    }
+
     public center(): Style {
         return this.justify('center').align('center');
     }
